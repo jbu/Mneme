@@ -836,9 +836,9 @@ class WelcomePage():
 
     @cherrypy.expose
     def do_login(self):
-        if cherrypy.session.get('connection') <> None:
-            cherrypy.InternalRedirect('/browse/')
-        print self.oauthconf
+        connection = cherrypy.session.get('connection')
+        if connection <> None and not connection.credentials.invalid:
+            raise cherrypy.HTTPRedirect('/browse/')
         flow = OAuth2WebServerFlow(client_id=self.oauthconf['client_id'],
                                    client_secret=self.oauthconf['client_secret'],
                                    scope='https://www.personis.info/auth/model',
